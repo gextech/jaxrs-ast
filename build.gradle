@@ -1,0 +1,71 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+
+group = project.group
+version = project.version
+
+sourceCompatibility = project.javaVersion
+targetCompatibility = project.javaVersion
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile "org.codehaus.groovy:groovy-all:${project.groovyVersion}"
+  testCompile "org.spockframework:spock-core:${project.spockVersion}"
+  testCompile 'org.gcontracts:gcontracts-core:1.2.12'
+  testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+}
+
+task sourcesJar(type: Jar) {
+  classifier 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives sourcesJar
+}
+
+publishing {
+  repositories {
+    maven {
+      url "http://nexus.plataforma.virginia.exp.mx/nexus/content/repositories/snapshots/"
+      credentials {
+        username nexusUsername
+        password nexusPassword
+      }
+    }
+  }
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      artifact sourcesJar
+
+      pom.withXml {
+        def root = asNode()
+        root.appendNode('name', project.name)
+        root.appendNode('description', project.description)
+        root.appendNode('url', 'https://github.com/gextech/jaxrs-ast')
+        root.appendNode('inceptionYear', '2014')
+
+        def scm = root.appendNode('scm')
+        scm.appendNode('url', 'https://github.com/gextech/jaxrs-ast')
+        scm.appendNode('connection', 'scm:https://domix@github.com/gextech/jaxrs-ast.git')
+        scm.appendNode('developerConnection', 'scm:git@github.com:gextech/jaxrs-ast.git')
+
+        def license = root.appendNode('licenses').appendNode('license')
+        license.appendNode('name', 'The Apache Software License, Version 2.0')
+        license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+        license.appendNode('distribution', 'repo')
+
+        def developers = root.appendNode('developers')
+        def domix = developers.appendNode('developer')
+        domix.appendNode('id', 'domix')
+        domix.appendNode('name', 'Domingo Suarez Torres')
+        domix.appendNode('email', 'domingo.suarez@gmail.com')
+      }
+    }
+  }
+}
