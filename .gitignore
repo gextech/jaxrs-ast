@@ -3,6 +3,6 @@ build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
-jaxrs-ast.iml
-jaxrs-ast.ipr
-jaxrs-ast.iws
+*.iml
+*.ipr
+*.iws
