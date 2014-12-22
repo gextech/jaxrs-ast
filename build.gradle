@@ -15,7 +15,6 @@ repositories {
 dependencies {
   compile "org.codehaus.groovy:groovy-all:${project.groovyVersion}"
   testCompile "org.spockframework:spock-core:${project.spockVersion}"
-  testCompile 'org.gcontracts:gcontracts-core:1.2.12'
   testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 }
 
