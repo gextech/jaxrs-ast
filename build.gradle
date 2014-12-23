@@ -1,6 +1,18 @@
+import java.text.SimpleDateFormat
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+  }
+}
+
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 group = project.group
 version = project.version
@@ -18,8 +30,26 @@ dependencies {
   testCompile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
 }
 
-task sourcesJar(type: Jar) {
-  classifier 'sources'
+Date buildTimeAndDate = new Date()
+ext {
+  buildDate = new SimpleDateFormat('dd-MMM-yyyy').format(buildTimeAndDate)
+  buildTime = new SimpleDateFormat('hh:mm aa').format(buildTimeAndDate)
+}
+
+def jarManifestAttributes = [
+  'Built-By'  : System.properties['user.name'],
+  'Created-By': System.properties['java.version'] + ' (' + System.properties['java.vendor'] + ' ' + System.getProperty("java.vm.version") + ")",
+  'Build-Date': buildDate,
+  'Build-Time': buildTime]
+
+jar {
+  manifest {
+    attributes(jarManifestAttributes)
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
   from sourceSets.main.allSource
 }
 
@@ -27,16 +57,8 @@ artifacts {
   archives sourcesJar
 }
 
+
 publishing {
-  repositories {
-    maven {
-      url "http://nexus.plataforma.virginia.exp.mx/nexus/content/repositories/snapshots/"
-      credentials {
-        username nexusUsername
-        password nexusPassword
-      }
-    }
-  }
   publications {
     mavenJava(MavenPublication) {
       from components.java
@@ -64,6 +86,39 @@ publishing {
         domix.appendNode('id', 'domix')
         domix.appendNode('name', 'Domingo Suarez Torres')
         domix.appendNode('email', 'domingo.suarez@gmail.com')
+      }
+    }
+  }
+}
+
+bintray {
+  user = project.hasProperty('bintray_user') ? bintray_user : ''
+  key = project.hasProperty('bintray_api_key') ? bintray_api_key : ''
+
+  publications = ['mavenJava']
+  dryRun = false //Whether to run this as dry-run, without deploying
+  publish = true //If version should be auto published after an upload
+  pkg {
+    repo = 'oss'
+    userOrg = 'gextech'
+    name = project.name
+    desc = project.description
+    websiteUrl = 'https://github.com/gextech/jaxrs-ast'
+    issueTrackerUrl = 'https://github.com/gextech/jaxrs-ast/issues'
+    vcsUrl = 'https://github.com/gextech/jaxrs-ast.git'
+    licenses = ['Apache-2.0']
+    labels = ['gex', 'serling', 'jaxrs']
+    publicDownloadNumbers = true
+    attributes = ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee']
+    //Optional version descriptor
+    version {
+      name = project.version
+      desc = project.description
+      mavenCentralSync {
+        sync = false
+        user = ''
+        password = ''
+        close = '1'
       }
     }
   }
