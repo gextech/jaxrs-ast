@@ -1,4 +1,10 @@
 
+0.1.11 / 2014-12-29
+==================
+
+  * polish docs
+  * added license plugin, fixed project name, improved travis ci config
+
 0.1.10 / 2014-12-23
 ==================
 
