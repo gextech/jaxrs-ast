@@ -31,3 +31,7 @@ GitHub, Factoids and Stats
 
 ---
 
+Usage
+--------------------------
+
+Use the annotation @Resource in your JAX-RS resources.
