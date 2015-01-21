@@ -20,7 +20,7 @@ Requirements
 
 [!["JDK"](https://img.shields.io/badge/JDK-8.0+-F30000.svg?style=flat)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 [!["Jersey"](https://img.shields.io/badge/Jersey-2.14-FFA82B.svg?style=flat)](https://jersey.java.net/)
-[!["Groovy"](https://img.shields.io/badge/Groovy-2.3.9-4298B8.svg?style=flat)](http://groovy-lang.org/)
+[!["Groovy"](https://img.shields.io/badge/Groovy-2.4.0-4298B8.svg?style=flat)](http://groovy-lang.org/)
 
 GitHub, Factoids and Stats
 --------------------------
