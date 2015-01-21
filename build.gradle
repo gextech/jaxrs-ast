@@ -21,8 +21,8 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
+    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
   }
 }
 
@@ -148,6 +148,10 @@ bintray {
     version {
       name = project.version
       desc = project.description
+      gpg {
+        sign = project.hasProperty('gex_gpg_passphrase')
+        passphrase = project.hasProperty('gex_gpg_passphrase') ? gex_gpg_passphrase : ''
+      }
       mavenCentralSync {
         sync = false
         user = ''
