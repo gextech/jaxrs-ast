@@ -1,4 +1,9 @@
 
+0.1.14 / 2015-03-04
+==================
+
+  * bugfix, wrong validation to detect annotations in interface instead of class method
+
 0.1.13 / 2015-03-04
 ==================
 
