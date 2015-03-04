@@ -1,4 +1,9 @@
 
+0.1.15 / 2015-03-04
+==================
+
+  * trying to fix the issue with missing Annotations
+
 0.1.14 / 2015-03-04
 ==================
 
