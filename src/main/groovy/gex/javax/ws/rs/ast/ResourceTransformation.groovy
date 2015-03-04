@@ -46,12 +46,7 @@ class ResourceTransformation implements ASTTransformation {
   private processClassNode(ClassNode classNode) {
     classNode.getInterfaces().each { ClassNode interfaceNode ->
       interfaceNode.getAnnotations().each { AnnotationNode annotationNode ->
-
-        def annotationInClassFound = classNode.getAnnotations().find { annotationNode }
-
-        if (!annotationInClassFound) {
-          classNode.addAnnotation(annotationNode)
-        }
+        addAnnotationIfMissingInDestination(classNode, annotationNode)
       }
 
       interfaceNode.getAllDeclaredMethods().each { MethodNode methodNode ->
@@ -59,10 +54,8 @@ class ResourceTransformation implements ASTTransformation {
 
         if (method) {
           methodNode.getAnnotations().each { AnnotationNode annotationNode ->
-            def annotationFoundInMethod = method.getAnnotations().find { annotationNode }
-            if (!annotationFoundInMethod) {
-              method.addAnnotation(annotationNode)
-            }
+
+            addAnnotationIfMissingInDestination(method, annotationNode)
 
             for (int i = 0; i < method.getParameters().size(); i++) {
               Parameter parameterInClass = method.getParameters()[i]
@@ -72,14 +65,22 @@ class ResourceTransformation implements ASTTransformation {
               def annotationsFoundInParameterInterface = parameterInInterface.getAnnotations()
 
               annotationsFoundInParameterInterface.each {
-                if (!annotationsFoundInParameterClass.find { it }) {
-                  parameterInClass.addAnnotation(it)
-                }
+                addAnnotationIfMissingInDestination(parameterInClass, it)
               }
             }
           }
         }
       }
+    }
+  }
+
+  private void addAnnotationIfMissingInDestination(AnnotatedNode destination, AnnotationNode annotation) {
+    def annotationNode = destination.getAnnotations().find {
+      it == annotation
+    }
+
+    if (!annotationNode) {
+      destination.addAnnotation(annotation)
     }
   }
 }
