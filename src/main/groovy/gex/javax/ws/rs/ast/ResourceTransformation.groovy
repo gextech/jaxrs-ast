@@ -59,7 +59,7 @@ class ResourceTransformation implements ASTTransformation {
 
         if (method) {
           methodNode.getAnnotations().each { AnnotationNode annotationNode ->
-            def annotationFoundInMethod = methodNode.getAnnotations().find { annotationNode }
+            def annotationFoundInMethod = method.getAnnotations().find { annotationNode }
             if (!annotationFoundInMethod) {
               method.addAnnotation(annotationNode)
             }
