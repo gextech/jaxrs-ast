@@ -16,6 +16,7 @@
  */
 package gex.javax.ws.rs
 
+import gex.javax.ws.rs.sample.AnotherResource
 import gex.javax.ws.rs.sample.UserResource
 import groovy.text.GStringTemplateEngine
 import groovy.text.TemplateEngine
@@ -63,16 +64,49 @@ class DemoResource implements gex.javax.ws.rs.sample.UserResource {
   Response getUsers(@QueryParam("from") Long from, @QueryParam("size") Long size) {null}
 
   Response postUsers() {null}
+
+  Response putUser(@DefaultValue('iamEdu') @QueryParam('name') String name, Integer foo) {
+    return null
+  }
 }
 
 '''
 
-  def resource = '''
+  def resourceWithExistingAnnotation = '''
+package gex.javax.ws.rs
+
+import javax.ws.rs.*
+import javax.ws.rs.core.Response
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+
+@Resource
+@Path("/catalog/{catalogName}")
+@Consumes(APPLICATION_JSON)
+@Produces(APPLICATION_JSON)
+class SomeResource implements gex.javax.ws.rs.sample.UserResource {
+
+  @GET
+  Response getUsers(@QueryParam("from") Long from, @QueryParam("size") Long size) {null}
+
+  @POST
+  Response postUsers() {null}
+
+  Response putUser(@DefaultValue('iamEdu') @QueryParam('name') String name, Integer foo) {
+    return null
+  }
+}
 '''
 
-  def "should foo"() {
+  def "should create and instance of the resource"() {
     when:
       def c = create_instance_of(dd)
+    then:
+      c instanceof UserResource
+  }
+
+  def "should create and instance of the resource with duplicate annotations"() {
+    when:
+      def c = new AnotherResource()
     then:
       c instanceof UserResource
   }

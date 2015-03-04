@@ -46,7 +46,12 @@ class ResourceTransformation implements ASTTransformation {
   private processClassNode(ClassNode classNode) {
     classNode.getInterfaces().each { ClassNode interfaceNode ->
       interfaceNode.getAnnotations().each { AnnotationNode annotationNode ->
-        classNode.addAnnotation(annotationNode)
+
+        def annotationInClassFound = classNode.getAnnotations().find { annotationNode }
+
+        if (!annotationInClassFound) {
+          classNode.addAnnotation(annotationNode)
+        }
       }
 
       interfaceNode.getAllDeclaredMethods().each { MethodNode methodNode ->
@@ -54,7 +59,24 @@ class ResourceTransformation implements ASTTransformation {
 
         if (method) {
           methodNode.getAnnotations().each { AnnotationNode annotationNode ->
-            method.addAnnotation(annotationNode)
+            def annotationFoundInMethod = methodNode.getAnnotations().find { annotationNode }
+            if (!annotationFoundInMethod) {
+              method.addAnnotation(annotationNode)
+            }
+
+            for (int i = 0; i < method.getParameters().size(); i++) {
+              Parameter parameterInClass = method.getParameters()[i]
+              Parameter parameterInInterface = methodNode.getParameters()[i]
+
+              def annotationsFoundInParameterClass = parameterInClass.getAnnotations()
+              def annotationsFoundInParameterInterface = parameterInInterface.getAnnotations()
+
+              annotationsFoundInParameterInterface.each {
+                if (!annotationsFoundInParameterClass.find { it }) {
+                  parameterInClass.addAnnotation(it)
+                }
+              }
+            }
           }
         }
       }

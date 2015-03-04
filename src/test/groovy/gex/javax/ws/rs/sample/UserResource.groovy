@@ -35,4 +35,8 @@ interface UserResource {
   @POST
   Response postUsers()
 
+
+  @PUT
+  Response putUser(@QueryParam('name') @DefaultValue('iamEdu') String name, @QueryParam('foo') Integer foo)
+
 }
