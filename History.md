@@ -1,4 +1,10 @@
 
+0.1.16 / 2015-03-16
+==================
+
+  * added release plugin
+  * fix to prevent duplicate annotations
+
 0.1.15 / 2015-03-04
 ==================
 
