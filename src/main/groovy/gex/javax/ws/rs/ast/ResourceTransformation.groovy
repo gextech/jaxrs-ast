@@ -51,7 +51,6 @@ class ResourceTransformation implements ASTTransformation {
 
       interfaceNode.getAllDeclaredMethods().each { MethodNode methodNode ->
         MethodNode method = classNode.getMethod(methodNode.name, methodNode.parameters)
-
         if (method) {
           methodNode.getAnnotations().each { AnnotationNode annotationNode ->
 
@@ -61,7 +60,6 @@ class ResourceTransformation implements ASTTransformation {
               Parameter parameterInClass = method.getParameters()[i]
               Parameter parameterInInterface = methodNode.getParameters()[i]
 
-              def annotationsFoundInParameterClass = parameterInClass.getAnnotations()
               def annotationsFoundInParameterInterface = parameterInInterface.getAnnotations()
 
               annotationsFoundInParameterInterface.each {
@@ -75,8 +73,8 @@ class ResourceTransformation implements ASTTransformation {
   }
 
   private void addAnnotationIfMissingInDestination(AnnotatedNode destination, AnnotationNode annotation) {
-    def annotationNode = destination.getAnnotations().find {
-      it == annotation
+    def annotationNode = destination.getAnnotations().find { AnnotationNode annotationNode ->
+      annotationNode.getClassNode() == annotation.getClassNode()
     }
 
     if (!annotationNode) {
